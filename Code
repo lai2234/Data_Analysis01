@@ -1,0 +1,106 @@
+#install package
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+iod = pd.read_csv('InstacartOrdersByDepartment.csv')
+
+#Research question :Do people order different foods at different times of day? 
+#For example, do people order more junk food relative to other foods late at night?
+
+# When is the time when people order the most? 
+e = iod[['num_orders_hour', 'order_hour_of_day']].groupby(['order_hour_of_day']).agg('sum')
+e = e.reset_index()
+e.columns = ['Hours of day','Number of orders']
+e.plot.scatter(x='Hours of day', y='Number of orders')
+
+# add title
+plt.title("Scatterplot of total order number and hours of the day 0= 12:00am, 23= 11:00pm")
+
+#Which product does people order the most?
+a = iod[['department','num_orders_hour']].groupby(['department']).agg('sum')
+a = a.reset_index()
+a.columns = ['Food','Number of product']
+
+# set the size(width, height)
+f, ax = plt.subplots(figsize=(30,15)) 
+plt.ylabel('Number of Orders')
+plt.xlabel('Food')
+plt.title('Number of product v.s. Food')
+plt.bar(a['Food'], a['Number of product'], color='red')
+
+
+
+
+#Subsetting Produce
+produce = iod.loc[iod['department'] == 'produce']
+
+#Subsetting to only hours and number of order at that specific hour
+phrs = produce[['order_hour_of_day', 'num_orders_hour']]
+
+#Bar chart
+plt.ylabel('Number of Orders')
+plt.xlabel('Hour of the Day')
+plt.title('Produce by hour of the day')
+plt.bar(phrs['order_hour_of_day'], phrs['num_orders_hour'], color='blue')
+#As we can see, 14:00 is the peak time when people purchase produce on the app.
+#People purchase produce mostly in the afternoon
+#The rising trend of the peak starts at 9:00am and slowing down at 4:00 pm
+
+
+
+
+
+#Subsetting dairy eggs
+dairyeggs = iod.loc[iod['department'] == 'dairy eggs']
+
+#Subsetting only hour and number of order
+dhrs = produce[['order_hour_of_day', 'num_orders_hour']]
+
+#Bar chart
+plt.ylabel('Number of Orders')
+plt.xlabel('Hour of the Day')
+plt.title('Produce by hour of the day')
+
+plt.bar(dhrs['order_hour_of_day'], dhrs['num_orders_hour'], color='green')
+
+#As we can see, 14:00 is the peak time when people purchase dairy eggs on the app.
+#People purchase eggs mostly in the morning and afternoon
+#The rising trend of the peak starts at 8:00am and slowing down at 5:00 pm
+
+
+
+
+
+#Subsetting beverage 
+beverages = iod.loc[iod['department'] == 'beverages']
+
+#Subsetting only hour and number of order
+bhrs = produce[['order_hour_of_day', 'num_orders_hour']]
+
+#Bar chart
+plt.ylabel('Number of Orders')
+plt.xlabel('Hour of the Day')
+plt.title('Produce by hour of the day')
+
+plt.bar(bhrs['order_hour_of_day'], bhrs['num_orders_hour'], color='orange')
+
+#As we can see, 14:00 is the peak time when people purchase beverages on the app.
+#People purchase beverages mostly in the morning and afternoon.
+#The rising trend of the peak starts at 7:00am and slowing down at 5:00 pm.
+
+
+# Conclusion
+In this project, I have discovered that :
+
+- The majority of people shop at 2:00 pm as we demonstrated that by creating a bar chart of Produce, Dairy eggs, and Beverages.
+- Produce has the most sold.
+- Most of the trend of products ends in the afternoon.
+- Despite 2:00 pm is the peak hour, the trend time for each product is different.
+   - The trend of Produce starts at 9:00 am.
+   - The trend of Dairy Eggs starts at 8:00 am.
+   - The trend of Beverages starts at 7:00 am.
+
+
+
